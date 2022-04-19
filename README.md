@@ -21,3 +21,9 @@ setproxy yarn http://127.0.0.1:7890
 ```bash
 setproxy -d yarn http://127.0.0.1:7890
 ```
+
+## Todo
+
+- [ ] Add usage example
+- [ ] Delete proxy
+- [ ] Proxy configurable
