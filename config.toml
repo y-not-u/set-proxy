@@ -1,0 +1,27 @@
+[git]
+set = [
+  "git config http.proxy {url}"
+]
+unset = [
+  "git config --unset http.proxy"
+]
+
+[npm]
+set = [
+  "npm config set proxy {url}",
+  "npm config set https-proxy {url}"
+]
+unset = [
+  "npm config delete proxy",
+  "npm config delete https-proxy",
+]
+
+[yarn]
+set = [
+  "yarn config set proxy {url}",
+  "yarn config set https-proxy {url}"
+]
+unset = [
+  "yarn config delete proxy",
+  "yarn config delete https-proxy",
+]
