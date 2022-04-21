@@ -17,8 +17,31 @@ setproxy yarn http://127.0.0.1:7890
 setproxy -d yarn
 ```
 
-## Todo
+## Custom
 
-- [x] Add usage example
-- [x] Delete proxy
-- [x] Proxy configurable
+you can write more commands in `cargo.toml`
+
+Off course, **setproxy** will read the specified file via command `-c` or `--config`
+
+*config.toml*
+
+```toml
+[git]
+set = [
+  "git config http.proxy {url}"
+]
+unset = [
+  "git config --unset http.proxy"
+]
+
+[npm]
+set = [
+  "npm config set proxy {url}",
+  "npm config set https-proxy {url}"
+]
+unset = [
+  "npm config delete proxy",
+  "npm config delete https-proxy",
+]
+```
+

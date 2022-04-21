@@ -6,10 +6,10 @@ use std::process::Command;
 use structopt::StructOpt;
 use toml;
 
-/** 
+/**
 Set a proxy for the other CLI
 
-Example: 
+Example:
 
 Set: setproxy npm http://127.0.0.1:8080/
 
@@ -29,7 +29,7 @@ struct CLI {
     delete: bool,
 
     #[structopt(short, long, parse(from_os_str), default_value = "config.toml")]
-    config: PathBuf
+    config: PathBuf,
 }
 
 #[derive(Debug, Deserialize)]
@@ -51,16 +51,17 @@ fn main() {
         match delete {
             true => {
                 for cmd in proxy.unset.iter() {
-                    run_command(cmd.clone());
+                    run_command(cmd.as_str());
                 }
             }
             false => {
                 if let Some(url) = url {
                     for cmd in proxy.set.iter() {
-                        if cmd.contains("{url}") {
-                            let cmd = cmd.replace("{url}", url.as_str());
-                            run_command(cmd);
-                        }
+                        let cmd: String = match cmd.contains("{url}") {
+                            true => cmd.replace("{url}", url.as_str()),
+                            false => String::from(cmd)
+                        };
+                        run_command(cmd.as_str());
                     }
                 }
             }
@@ -78,7 +79,7 @@ fn read_config(path: PathBuf) -> HashMap<String, Proxy> {
 }
 
 #[cfg(target_os = "windows")]
-fn run_command(cmd: String) {
+fn run_command(cmd: &str) {
     println!("Running: {}", cmd);
     let mut args: Vec<&str> = cmd.split_whitespace().collect();
     args.insert(0, "/c");
@@ -90,7 +91,8 @@ fn run_command(cmd: String) {
 }
 
 #[cfg(not(target_os = "windows"))]
-fn run_command(cmd: String) {
+fn run_command(cmd: &str) {
+    println!("Running: {}", cmd);
     let mut args: Vec<&str> = cmd.split_whitespace().collect();
     let cmd = args[0];
     args.remove(0);
