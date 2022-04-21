@@ -6,7 +6,15 @@ use std::process::Command;
 use structopt::StructOpt;
 use toml;
 
-/// Set a proxy for the other CLI
+/** 
+Set a proxy for the other CLI
+
+Example: 
+
+Set: setproxy npm http://127.0.0.1:8080/
+
+Unset: setproxy -d npm
+*/
 #[derive(StructOpt, Debug)]
 struct CLI {
     /// Program wants to proxy
