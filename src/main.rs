@@ -1,8 +1,8 @@
 use serde_derive::Deserialize;
 use std::collections::HashMap;
-use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
+use std::{env, fs};
 use structopt::StructOpt;
 use toml;
 
@@ -59,7 +59,7 @@ fn main() {
                     for cmd in proxy.set.iter() {
                         let cmd: String = match cmd.contains("{url}") {
                             true => cmd.replace("{url}", url.as_str()),
-                            false => String::from(cmd)
+                            false => String::from(cmd),
                         };
                         run_command(cmd.as_str());
                     }
@@ -72,7 +72,19 @@ fn main() {
 }
 
 fn read_config(path: PathBuf) -> HashMap<String, Proxy> {
-    let toml_string = fs::read_to_string(path).expect("No config file found");
+    let mut config_path = path.clone();
+    if config_path.exists() == false {
+        let home_dir = env::home_dir().unwrap();
+        config_path = [home_dir.to_str().unwrap(), ".config", "setproxy.toml"]
+            .iter()
+            .collect();
+    }
+
+    if config_path.exists() == false {
+        eprintln!("Error: config file not found");
+    }
+
+    let toml_string = fs::read_to_string(config_path).expect("No config file found");
     let data: HashMap<String, Proxy> = toml::from_str(&toml_string).unwrap();
 
     data
